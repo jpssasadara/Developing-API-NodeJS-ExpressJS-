@@ -24,12 +24,18 @@ router.post('/',(req,res,next)=>{
     .save()
     .then(result =>{
         console.log(result);
+        res.status(201).json({
+            massage:'Handling post request to /products',
+            createdproduct: result
+        });
     })
-    .catch(err => console.log(err));
-    res.status(201).json({
-        massage:'Handling post request to /products',
-        createdproduct: product
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+           error: err 
+        })
     });
+   
 });
 
 router.get('/:productId',(req,res,next)=>{
@@ -48,7 +54,12 @@ router.get('/:productId',(req,res,next)=>{
     .exec()
     .then(doc => {
         console.log("From DataBase" ,doc);
-        res.status(200).json(doc);
+        if(doc){
+            res.status(200).json(doc);
+        }else{
+            res.status(404).json({message: "No valid entry here"})
+        }
+        
     })
     .catch(err => {
         console.log(err);
