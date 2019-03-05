@@ -9,11 +9,27 @@ router.get('/',(req,res,next)=>{
         massage:'Handling GET request to /products'
     });*/
         Product.find()
+        .select('name price _id') // <<== Selecting fields
         .exec()
         .then(docs =>{
             console.log(docs);
+            const response = {
+                count: docs.length,
+               // products: docs
+                products: docs.map(doc =>{
+                    return{
+                        name: doc.name,
+                        price: doc.price,
+                        _id: doc._id,
+                        request:{
+                            type: "GET",
+                            url: "http://localhost:3000/products/" + doc._id
+                        }
+                    };
+                })
+            };
            // if(docs.length >=0){
-                res.status(200).json(docs);
+                res.status(200).json(response);
            // }else{
            //     res.status(404).json({
            //     message: 'No entries found'
@@ -68,11 +84,19 @@ router.get('/:productId',(req,res,next)=>{
         });
     } */
     Product.findById(id)
+    .select('name price _id')
     .exec()
     .then(doc => {
         console.log("From DataBase" ,doc);
         if(doc){
-            res.status(200).json(doc);
+           // res.status(200).json(doc);  // <<= shall we modify this as bellow
+            res.status(200).json({
+                product: doc,
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost/products'
+                }
+            })
         }else{
             res.status(404).json({message: "No valid entry here"})
         }
@@ -98,7 +122,14 @@ router.patch('/:productId',(req,res,next)=>{
         .exec()
         .then(result =>{
             console.log(result);
-            res.status(200).json(result);
+           // res.status(200).json(result);  //<<= shall we modify this as below
+            res.status(200).json({
+                massage: 'Product updated',
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3000/product/' + id
+                }
+            })
         })
         .catch(err => {
             console.log(err);
