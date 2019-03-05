@@ -12,7 +12,13 @@ router.get('/',(req,res,next)=>{
         .exec()
         .then(docs =>{
             console.log(docs);
-            res.status(200).json(docs);
+           // if(docs.length >=0){
+                res.status(200).json(docs);
+           // }else{
+           //     res.status(404).json({
+           //     message: 'No entries found'
+           //     });
+           // }
         })
         .catch(err => {
             res.status(500).json({
@@ -77,16 +83,48 @@ router.get('/:productId',(req,res,next)=>{
         res.status(500).json({error:err})
     });
 });
-
+      //update
 router.patch('/:productId',(req,res,next)=>{
-    res.status(200).json({
+   /* res.status(200).json({
         massage: 'Update product !'
-    });
+    }); */
+    const id = req.params.productId;
+    //Product.update({_id: id},{$set:{name: req.body.newName,price: req.body.newPrice}})
+    const updateOps = {};
+    for(const ops of req.body){
+        updateOps[ops.propName] = ops.value;
+    }
+    Product.update({_id: id},{$set:updateOps})
+        .exec()
+        .then(result =>{
+            console.log(result);
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error:err
+            });
+        })
+        
+       
 });
 
 router.delete('/:productId',(req,res,next)=>{
-    res.status(200).json({
+   /* res.status(200).json({
         massage: 'Delete product !'
+    });*/
+    const id = req.params.productId;
+    Product.remove({_id: id})
+    .exec()
+    .then(result =>{
+        res.status(200).json(result);
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
     });
 });
 
