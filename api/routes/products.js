@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const Product = require('../models/product');
 
-router.get('/',(req,res,next)=>{
+router.get('/',(req,res1,next)=>{
     /*res.status(200).json({
         massage:'Handling GET request to /products'
     });*/
@@ -14,7 +14,7 @@ router.get('/',(req,res,next)=>{
         .then(docs =>{
             console.log(docs);
             const response = {
-                count: docs.length,
+                countOfList: docs.length,
                // products: docs
                 products: docs.map(doc =>{
                     return{
@@ -29,7 +29,7 @@ router.get('/',(req,res,next)=>{
                 })
             };
            // if(docs.length >=0){
-                res.status(200).json(response);
+                res1.status(200).json(response);
            // }else{
            //     res.status(404).json({
            //     message: 'No entries found'
@@ -37,7 +37,7 @@ router.get('/',(req,res,next)=>{
            // }
         })
         .catch(err => {
-            res.status(500).json({
+            res1.status(500).json({
                 error: err
             });
         });
