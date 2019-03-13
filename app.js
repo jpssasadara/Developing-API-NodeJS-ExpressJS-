@@ -21,6 +21,7 @@ mongoose.connect('mongodb://sasadara:'+process.env.MONGO_ATLAS_PW+'@node-rest-sh
 });*/
 
 app.use(morgan('dev'));
+app.use('/uploads',express.static('uploads'));  // --> for make upload file staticaly available
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
