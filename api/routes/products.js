@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
-const upload = multer({dest: '/uploads'});
+const upload = multer({dest: 'uploads/'});
 
 const Product = require('../models/product');
 
@@ -48,11 +48,12 @@ router.get('/',(req,res1,next)=>{
 // "body parser" is used to get submited json format data not url from body 
 // as post request 
 // "multer is also package like that"
-router.post('/',(req,res,next)=>{
+router.post('/',upload.single('productImage'),(req,res,next)=>{
    /* const product = {
         name: req.body.name,
         price: req.body.price
     }; */
+    console.log(req.file);
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
