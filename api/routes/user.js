@@ -96,7 +96,7 @@ router.post("/login",(req, res, next)=>{
                 )
                 return res.status(200).json({
                    message: 'Auth successfull',
-                   token: token
+                   token: token  // <- token part of nodeJS is very similer to AngularJS RootScope part
                });
            }
            res.status(401).json({

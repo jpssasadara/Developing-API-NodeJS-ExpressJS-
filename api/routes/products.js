@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const checkAuth = require('../middleware/check-auth');
 
 
 //<<<<<<<<<<<<<--- Uplaoding file setup>>>>>>>>>>>>>>>>> FROM >>>>>>>>>>>>>>>>>>>
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>
+
 const multer = require('multer');
 /*const storage = multer.diskStorage({
     destination: function(res, file, cb){
@@ -80,8 +82,10 @@ router.get('/',(req,res1,next)=>{
 // "body parser" is used to get submited json format data not url from body 
 // as post request 
 // "multer is also package that is used to manage storage"
-router.post('/',upload.single('productImage'),(req,res,next)=>{
-   /* const product = {
+
+router.post('/', checkAuth, upload.single('productImage'), (req,res,next)=>{
+            // if we pass token from Body order of pasameters should be ('/', upload.single('productImage'), checkAuth, (req,res,next)
+    /* const product = {
         name: req.body.name,
         price: req.body.price
     }; */
@@ -110,7 +114,7 @@ router.post('/',upload.single('productImage'),(req,res,next)=>{
    
 });
 
-router.get('/:productId',(req,res,next)=>{
+router.get('/:productId',checkAuth, (req,res,next)=>{
     const id = req.params.productId;
    /* if(id === 'special'){
         res.status(200).json({
@@ -147,7 +151,7 @@ router.get('/:productId',(req,res,next)=>{
     });
 });
       //update
-router.patch('/:productId',(req,res,next)=>{
+router.patch('/:productId',checkAuth,(req,res,next)=>{
    /* res.status(200).json({
         massage: 'Update product !'
     }); */
@@ -180,7 +184,7 @@ router.patch('/:productId',(req,res,next)=>{
        
 });
 
-router.delete('/:productId',(req,res,next)=>{
+router.delete('/:productId', checkAuth, (req,res,next)=>{
    /* res.status(200).json({
         massage: 'Delete product !'
     });*/
