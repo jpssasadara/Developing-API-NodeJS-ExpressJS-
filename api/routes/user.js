@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require("../models/user");
 
@@ -82,8 +83,20 @@ router.post("/login",(req, res, next)=>{
                });
            }
            if(result){
-               return res.status(200).json({
-                   message: 'Auth successfull'
+                // shall we fix a token when login - //https://github.com/auth0/node-jsonwebtoken 
+                const token = jwt.sign(
+                    {
+                        email: user[0].email,
+                        userId: user[0]._id
+                    },
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn: "1h"
+                    }
+                )
+                return res.status(200).json({
+                   message: 'Auth successfull',
+                   token: token
                });
            }
            res.status(401).json({
@@ -97,6 +110,6 @@ router.post("/login",(req, res, next)=>{
             error: err
         });
     });
-})
-//https://github.com/auth0/node-jsonwebtoken
+});
+
 module.exports = router;

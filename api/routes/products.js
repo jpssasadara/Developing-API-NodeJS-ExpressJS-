@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const multer = require('multer');
+const upload = multer({dest: '/uploads'});
 
 const Product = require('../models/product');
 
@@ -43,6 +45,9 @@ router.get('/',(req,res1,next)=>{
         });
 });
 
+// "body parser" is used to get submited json format data not url from body 
+// as post request 
+// "multer is also package like that"
 router.post('/',(req,res,next)=>{
    /* const product = {
         name: req.body.name,
@@ -124,7 +129,7 @@ router.patch('/:productId',(req,res,next)=>{
             console.log(result);
            // res.status(200).json(result);  //<<= shall we modify this as below
             res.status(200).json({
-                massage: 'Product updated',
+                massage: 'Product updated', 
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/product/' + id
